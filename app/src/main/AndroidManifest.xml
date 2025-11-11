@@ -13,21 +13,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CommUnity">
+
+        <!-- LoginActivity is NOW the starting point -->
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.App.Starting">
-            <intent-filter>
+            android:theme="@style/Theme.App.Starting"> <!-- MOVED the splash theme here -->
+            <intent-filter> <!-- MOVED the intent filter here -->
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- MainActivity is now a regular activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <!-- The intent-filter is GONE from here -->
+        </activity>
+
+        <!-- This part remains unchanged -->
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
