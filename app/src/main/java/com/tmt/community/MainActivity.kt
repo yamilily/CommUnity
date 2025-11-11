@@ -8,17 +8,15 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.tmt.community.databinding.ActivityMainBinding
-import android.content.Intent
-import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,20 +45,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        installSplashScreen()
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val tempLoginButton: Button = findViewById(R.id.temp_login_button)
-        tempLoginButton.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        }
+        // --- HERE IS THE FIX ---
+        // 1. Find the Toolbar we added to our layout.
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        // 2. Set this Toolbar as the official ActionBar for this Activity.
+        setSupportActionBar(toolbar)
+        // --- END OF FIX ---
 
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
+
+        // Now that an ActionBar exists, this code will no longer crash.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications

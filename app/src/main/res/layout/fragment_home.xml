@@ -4,35 +4,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Admin Panel"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_marginTop="16dp"
+android:text="Admin Panel"
+android:textSize="24sp"
+android:textStyle="bold"/>
 
-    <EditText
-        android:id="@+id/edit_text_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="Announcement Title" />
+<EditText
+android:id="@+id/edit_text_title"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginTop="20dp"
+android:hint="Announcement Title"
+android:inputType="textCapSentences" />
 
-    <EditText
-        android:id="@+id/edit_text_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Announcement Body" />
+<EditText
+android:id="@+id/edit_text_body"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginTop="8dp"
+android:hint="Announcement Body"
+android:inputType="textCapSentences|textMultiLine" />
 
-    <Button
-        android:id="@+id/button_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Send Announcement" />
+<Button
+android:id="@+id/button_send"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_marginTop="20dp"
+android:text="Send Announcement" />
 
-</LinearLayout>
+    </LinearLayout>
