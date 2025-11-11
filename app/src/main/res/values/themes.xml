@@ -14,17 +14,13 @@
         <!-- Customize your theme here. -->
 
     </style>
-    <!-- Splash Screen Theme -->
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <!-- Set the splash screen background, animated icon, and animation duration. -->
         <item name="windowSplashScreenBackground">@color/white</item>
 
-        <!-- Use windowSplashScreenAnimatedIcon to add a drawable or an animated
-             drawable. -->
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item> <!-- 1 second -->
 
-        <!-- Set the theme of the Activity that follows your splash screen. -->
+        <item name="windowSplashScreenAnimationDuration">2000</item>
+
         <item name="postSplashScreenTheme">@style/Theme.CommUnity</item>
     </style>
 </resources>
