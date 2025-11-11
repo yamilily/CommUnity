@@ -29,29 +29,16 @@ class LoginActivity : AppCompatActivity() {
                 repeatCount = 0 // Play only once
             }
 
-            // --- HACKY FIX STARTS HERE ---
-
-            // 1. SCALE UP to hide the watermark
-            // We make the view 20% larger than the container. This pushes the
-            // watermark (in the bottom-right) off the screen.
-            // You can adjust this value (e.g., 1.15f or 1.25f) if needed.
             val scaleFactor = 1.2f
             lottieView.scaleX = scaleFactor
             lottieView.scaleY = scaleFactor
 
-            // 2. REPOSITION to re-center the logo
-            // Because the logo is in the top-left of its 600x600 canvas, and we just
-            // scaled the whole view, we need to manually pull it back toward the center.
-            // We'll move it right by 10% of the screen width and down by 10% of the screen height.
             val displayMetrics = resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
             val screenHeight = displayMetrics.heightPixels
 
-            // Adjust these values if the centering is slightly off.
             lottieView.translationX = screenWidth * 0.25f
             lottieView.translationY = screenHeight * 0.11f
-
-            // --- HACKY FIX ENDS HERE ---
 
             val lottieParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
