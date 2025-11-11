@@ -64,9 +64,8 @@ class HomeFragment : Fragment() {
                     // It was successful!
                     Log.d("FunctionCall", "Function success!")
                     Toast.makeText(requireContext(), "Announcement sent!", Toast.LENGTH_SHORT).show()
-                    // Clear the text fields
-                    binding.editTextTitle.text.clear()
-                    binding.editTextBody.text.clear()
+                    binding.editTextTitle.text?.clear()
+                    binding.editTextBody.text?.clear()
                 }
                 binding.buttonSend.isEnabled = true // Re-enable button
             }
