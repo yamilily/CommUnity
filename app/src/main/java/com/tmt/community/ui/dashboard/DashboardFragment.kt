@@ -36,15 +36,11 @@ class DashboardFragment : Fragment() {
 
     // This is our new function to create and add the "rectangular box thingy"
     private fun addAnnouncementView(text: String) {
-        // Find our container from the XML layout
         val container = binding.announcementsContainer
 
-        // Create a new TextView programmatically
         val announcementTextView = TextView(requireContext()).apply {
-            // Set the text from the notification
             this.text = text
             textSize = 16f
-            // Set some padding and margins to make it look nice
             setPadding(24, 24, 24, 24)
             val layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,

@@ -14,9 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CommUnity">
         <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar">

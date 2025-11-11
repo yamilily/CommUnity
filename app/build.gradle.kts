@@ -54,6 +54,7 @@ dependencies {
     implementation("com.google.firebase:firebase-functions-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation(libs.androidx.activity)
+    implementation(libs.firebase.database.ktx)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -61,4 +62,5 @@ dependencies {
     implementation("com.airbnb.android:lottie:6.1.0")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.google.firebase:firebase-database-ktx:22.0.1")
 }
