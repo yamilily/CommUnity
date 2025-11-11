@@ -43,4 +43,14 @@
         app:layout_constraintVertical_bias="0.455"
         app:srcCompat="@drawable/_0__circumised" />
 
+    <Button
+        android:id="@+id/temp_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

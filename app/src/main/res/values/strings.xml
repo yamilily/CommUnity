@@ -4,4 +4,10 @@
     <string name="title_dashboard">Notifications</string>
     <string name="title_notifications">Dashboard</string>
     <string name="default_notification_channel_id">Town Announcements</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="no_account_register">Don\'t have an account? <b>Register</b></string>
+    <string name="app_logo">App Logo</string>
 </resources>
