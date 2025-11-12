@@ -32,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         splashScreen.setOnExitAnimationListener { splashScreenView ->
+            // ... (your existing animation code is here)
             val iconView = splashScreenView.iconView
             val iconParent = iconView.parent as ViewGroup
 
@@ -40,14 +41,14 @@ class LoginActivity : AppCompatActivity() {
                 repeatMode = LottieDrawable.RESTART
                 repeatCount = 0
             }
-            val scaleFactor = 1.2f
+            val scaleFactor = 1f
             lottieView.scaleX = scaleFactor
             lottieView.scaleY = scaleFactor
             val displayMetrics = resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
             val screenHeight = displayMetrics.heightPixels
-            lottieView.translationX = screenWidth * 0.26f
-            lottieView.translationY = screenHeight * 0.11f
+            lottieView.translationX = screenWidth * 0f
+            lottieView.translationY = screenHeight * 0f
             val lottieParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -58,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
             lottieView.playAnimation()
 
             val fadeOut = ObjectAnimator.ofFloat(
-                splashScreenView.view, View.ALPHA, 1f, 0f
+                splashScreenView.view, View.ALPHA, 0f, 0f
             ).apply {
                 duration = 300L
                 doOnEnd { splashScreenView.remove() }
@@ -69,17 +70,28 @@ class LoginActivity : AppCompatActivity() {
                 override fun onAnimationCancel(animation: Animator) {}
                 override fun onAnimationRepeat(animation: Animator) {}
 
+                // --- THIS IS THE NEW LOGIC ---
                 override fun onAnimationEnd(animation: Animator) {
-                    fadeOut.start()
+                    // When the animation finishes, check if a user is logged in.
+                    val currentUser = auth.currentUser
+                    if (currentUser != null) {
+                        // If logged in, go straight to MainActivity.
+                        navigateToMainActivity()
+                    } else {
+                        // If not logged in, just start the fade out and let the login screen appear.
+                        fadeOut.start()
+                    }
                 }
             })
         }
 
+        // --- Login logic remains the same ---
         val emailEditText = findViewById<TextInputEditText>(R.id.email_edit_text)
         val passwordEditText = findViewById<TextInputEditText>(R.id.password_edit_text)
         val loginButton = findViewById<Button>(R.id.login_button)
 
         loginButton.setOnClickListener {
+            // ... (your existing login button code is here, no changes needed)
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
@@ -98,14 +110,6 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                     }
                 }
-        }
-    }
-
-    public override fun onStart() {
-        super.onStart()
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            navigateToMainActivity()
         }
     }
 
