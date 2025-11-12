@@ -1,7 +1,11 @@
 package com.tmt.community
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -23,14 +27,16 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         auth = Firebase.auth
-        database = Firebase.database.reference
+        database = Firebase.database("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app").reference
 
         val emailEditText = findViewById<TextInputEditText>(R.id.email_edit_text)
         val passwordEditText = findViewById<TextInputEditText>(R.id.password_edit_text)
         val registerButton = findViewById<Button>(R.id.register_button)
         val loginTextView = findViewById<TextView>(R.id.login_text_view)
 
+        // --- REGISTER BUTTON LOGIC (Unchanged) ---
         registerButton.setOnClickListener {
+            // ... (your existing registration code)
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
@@ -52,12 +58,27 @@ class RegisterActivity : AppCompatActivity() {
                 }
         }
 
+        // --- CORRECTED TEXT AND CLICK LISTENER FOR "LOGIN" PROMPT ---
+        val promptText = getString(R.string.login_prompt)
+        val actionText = getString(R.string.login_action)
+
+        val spannableString = SpannableString("$promptText$actionText")
+        spannableString.setSpan(
+            StyleSpan(Typeface.BOLD),
+            promptText.length,
+            promptText.length + actionText.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        loginTextView.text = spannableString
+
         loginTextView.setOnClickListener {
+            // Go back to the LoginActivity
             finish()
         }
     }
 
     private fun saveUserToDatabase(userId: String, email: String?) {
+        // ... (your existing saveUserToDatabase code is here)
         val user = User(email = email, role = "resident")
         database.child("users").child(userId).setValue(user)
             .addOnCompleteListener { task ->

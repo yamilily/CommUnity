@@ -8,13 +8,13 @@ import android.text.Spanned
 import android.text.style.StyleSpan
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import android.widget.TextView
 
 class LoginActivity : AppCompatActivity() {
 
@@ -26,28 +26,14 @@ class LoginActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        val loginTextView = findViewById<TextView>(R.id.login_text_view)
-        val promptText = getString(R.string.login_prompt)
-        val actionText = getString(R.string.login_action)
-
-        val spannableString = SpannableString("$promptText$actionText")
-        spannableString.setSpan(
-            StyleSpan(Typeface.BOLD),
-            promptText.length,
-            promptText.length + actionText.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        loginTextView.text = spannableString
-
-        loginTextView.setOnClickListener {
-            finish()
-        }
-
         val emailEditText = findViewById<TextInputEditText>(R.id.email_edit_text)
         val passwordEditText = findViewById<TextInputEditText>(R.id.password_edit_text)
         val loginButton = findViewById<Button>(R.id.login_button)
+        val registerTextView = findViewById<TextView>(R.id.register_text_view)
 
+        // --- LOGIN BUTTON LOGIC (Unchanged) ---
         loginButton.setOnClickListener {
+            // ... (your existing login code is here)
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
@@ -66,6 +52,24 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                     }
                 }
+        }
+
+        // --- CORRECTED TEXT FOR THE REGISTER PROMPT ---
+        val promptText = getString(R.string.register_prompt) // USE THE CORRECT STRING
+        val actionText = getString(R.string.register_action) // USE THE CORRECT STRING
+
+        val spannableString = SpannableString("$promptText$actionText")
+        spannableString.setSpan(
+            StyleSpan(Typeface.BOLD),
+            promptText.length,
+            promptText.length + actionText.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        registerTextView.text = spannableString
+
+        registerTextView.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
     }
 
