@@ -2,7 +2,7 @@
     <string name="app_name">CommUnity</string>
     <string name="title_home">Home</string>
     <string name="title_menu">Menu</string>
-    <string name="title_notifications">announcements</string>
+    <string name="title_notifications">Announcements</string>
     <string name="default_notification_channel_id">Town Announcements</string>
     <string name="welcome_back">Welcome Back!</string>
     <string name="email">Email</string>
