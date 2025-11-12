@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tmt.community.AnnouncementHolder
-import com.tmt.community.databinding.FragmentDashboardBinding
+import com.tmt.community.databinding.FragmentNotificationsBinding
 
 class NotificationsFragment : Fragment() {
 
@@ -20,7 +20,7 @@ class NotificationsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         // This is the magic part! We are now "listening" to our radio station.
