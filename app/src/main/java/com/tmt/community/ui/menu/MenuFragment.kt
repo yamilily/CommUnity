@@ -18,16 +18,13 @@ class MenuFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_menu, container, false)
 
         val logoutButton: Button = view.findViewById(R.id.logout_button)
 
         logoutButton.setOnClickListener {
-            // Sign out the user from Firebase
             Firebase.auth.signOut()
 
-            // Go back to the Login Screen and clear all previous screens
             val intent = Intent(activity, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)

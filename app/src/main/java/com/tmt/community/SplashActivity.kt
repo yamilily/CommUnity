@@ -19,10 +19,6 @@ class SplashActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        // REMOVED: splashScreen.setKeepOnScreenCondition { true }
-        // That line was the entire cause of the deadlock.
-
-        // --- THE REST OF THE CODE IS CORRECT ---
         splashScreen.setOnExitAnimationListener { splashScreenView ->
             val iconView = splashScreenView.iconView
             val iconParent = iconView.parent as ViewGroup

@@ -48,21 +48,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // --- HERE IS THE FIX ---
-        // 1. Find the Toolbar we added to our layout.
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
-        // 2. Set this Toolbar as the official ActionBar for this Activity.
         setSupportActionBar(toolbar)
-        // --- END OF FIX ---
 
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
-        // Now that an ActionBar exists, this code will no longer crash.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_menu, R.id.navigation_notifications
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

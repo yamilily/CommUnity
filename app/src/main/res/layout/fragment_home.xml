@@ -15,6 +15,8 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
 
+        android:id="@+id/admin_panel_card"
+
     app:strokeColor="@color/purple_200"
     app:strokeWidth="1dp"
 

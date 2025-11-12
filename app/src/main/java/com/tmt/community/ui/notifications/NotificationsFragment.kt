@@ -23,18 +23,14 @@ class NotificationsFragment : Fragment() {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // This is the magic part! We are now "listening" to our radio station.
         AnnouncementHolder.newAnnouncement.observe(viewLifecycleOwner) { newText ->
-            // This block of code will run EVERY time a new announcement is received.
             if (newText != null) {
-                // Call our function to add the new "box" to the screen.
                 addAnnouncementView(newText)
             }
         }
         return root
     }
 
-    // This is our new function to create and add the "rectangular box thingy"
     private fun addAnnouncementView(text: String) {
         val container = binding.announcementsContainer
 
@@ -48,11 +44,9 @@ class NotificationsFragment : Fragment() {
             )
             layoutParams.setMargins(0, 16, 0, 0)
             this.layoutParams = layoutParams
-            // Set a background to make it look like a box
-            setBackgroundResource(android.R.drawable.editbox_background) // A simple default background
+            setBackgroundResource(android.R.drawable.editbox_background)
         }
 
-        // Add the new TextView to our container at the top (position 1, after the title)
         container.addView(announcementTextView, 1)
     }
 
