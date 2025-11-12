@@ -9,7 +9,7 @@
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
-        <item name="windowSplashScreenAnimationDuration">100</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>
         <!-- This line tells the splash screen which theme to apply AFTER it's done -->
         <item name="postSplashScreenTheme">@style/Theme.CommUnity</item>
     </style>
