@@ -31,7 +31,7 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
+firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version = "21.0.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

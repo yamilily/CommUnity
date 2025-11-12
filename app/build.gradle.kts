@@ -60,7 +60,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.airbnb.android:lottie:6.1.0")
-    implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("com.google.firebase:firebase-database-ktx:22.0.1")
+    implementation("com.google.firebase:firebase-database-ktx")
 }
