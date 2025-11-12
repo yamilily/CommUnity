@@ -2,7 +2,7 @@
     <string name="app_name">CommUnity</string>
     <string name="title_home">Home</string>
     <string name="title_menu">Menu</string>
-    <string name="title_notifications">Dashboard</string>
+    <string name="title_notifications">announcements</string>
     <string name="default_notification_channel_id">Town Announcements</string>
     <string name="welcome_back">Welcome Back!</string>
     <string name="email">Email</string>
@@ -10,4 +10,6 @@
     <string name="login">Login</string>
     <string name="no_account_register">Don\'t have an account? <b>Register</b></string>
     <string name="app_logo">App Logo</string>
+    <string name="login_prompt">Already have an account? </string>
+    <string name="login_action">Login</string>
 </resources>

@@ -1,7 +1,11 @@
 package com.tmt.community
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -22,11 +26,21 @@ class LoginActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        val registerTextView = findViewById<TextView>(R.id.register_text_view)
+        val loginTextView = findViewById<TextView>(R.id.login_text_view)
+        val promptText = getString(R.string.login_prompt)
+        val actionText = getString(R.string.login_action)
 
-        registerTextView.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+        val spannableString = SpannableString("$promptText$actionText")
+        spannableString.setSpan(
+            StyleSpan(Typeface.BOLD),
+            promptText.length,
+            promptText.length + actionText.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        loginTextView.text = spannableString
+
+        loginTextView.setOnClickListener {
+            finish()
         }
 
         val emailEditText = findViewById<TextInputEditText>(R.id.email_edit_text)
