@@ -6,18 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels // Important import for the cleaner ViewModel syntax
+import androidx.fragment.app.viewModels
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tmt.community.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
-    // This is the modern, null-safe way to handle view binding in Fragments
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    // This is the clean Kotlin way to get the ViewModel
     private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
@@ -45,23 +43,18 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Observe the userRole LiveData from the ViewModel
         homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
-            // This code runs whenever the role is fetched from Firebase
             if (role == "admin") {
-                // If user is an admin, SHOW the panel
                 binding.adminPanelCard.visibility = View.VISIBLE
             } else {
-                // If user is a resident (or anything else), HIDE the panel
                 binding.adminPanelCard.visibility = View.GONE
-                // You could add another view for residents and show it here!
             }
         }
     }
 
     private fun sendAnnouncement(title: String, body: String) {
         val database = Firebase.database.reference.child("announcements")
-        val announcementId = database.push().key ?: return // Exit if key is null
+        val announcementId = database.push().key ?: return
 
         val announcement = mapOf(
             "title" to title,
@@ -82,7 +75,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // This is crucial to prevent memory leaks
         _binding = null
     }
 }
