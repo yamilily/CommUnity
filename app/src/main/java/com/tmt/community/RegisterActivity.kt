@@ -34,7 +34,7 @@ class RegisterActivity : AppCompatActivity() {
         val registerButton = findViewById<Button>(R.id.register_button)
         val loginTextView = findViewById<TextView>(R.id.login_text_view)
 
-        // --- REGISTER BUTTON LOGIC (Unchanged) ---
+        // --- REGISTER BUTTON  LOGIC (Unchanged) ---
         registerButton.setOnClickListener {
             // ... (your existing registration code)
             val email = emailEditText.text.toString().trim()
