@@ -1,4 +1,4 @@
-package com.tmt.community
+package com.tmt.community.loginandregister
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -16,6 +16,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.tmt.community.MainActivity
+import com.tmt.community.R
+import com.tmt.community.loginandregister.User
 
 class RegisterActivity : AppCompatActivity() {
 

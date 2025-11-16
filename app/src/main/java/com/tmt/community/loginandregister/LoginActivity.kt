@@ -1,4 +1,4 @@
-package com.tmt.community
+package com.tmt.community.loginandregister
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -15,6 +15,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.tmt.community.MainActivity
+import com.tmt.community.R
+import com.tmt.community.loginandregister.RegisterActivity
 
 class LoginActivity : AppCompatActivity() {
 

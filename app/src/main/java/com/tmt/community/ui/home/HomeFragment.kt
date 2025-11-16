@@ -53,7 +53,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun sendAnnouncement(title: String, body: String) {
-        val database = Firebase.database.reference.child("announcements")
+        val database = Firebase.database("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app")
+            .reference.child("announcements")
         val announcementId = database.push().key ?: return
 
         val announcement = mapOf(

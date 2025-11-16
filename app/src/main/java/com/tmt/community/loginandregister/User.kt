@@ -1,4 +1,4 @@
-package com.tmt.community
+package com.tmt.community.loginandregister
 
 data class User(
     val email: String? = null,

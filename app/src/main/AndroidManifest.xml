@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CommUnity">
         <activity
-            android:name=".RegisterActivity"
+            android:name=".loginandregister.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".loginandregister.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar"></activity>
         <activity

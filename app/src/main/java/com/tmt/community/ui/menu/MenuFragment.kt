@@ -9,7 +9,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.tmt.community.LoginActivity
+import com.tmt.community.loginandregister.LoginActivity
 import com.tmt.community.R
 
 class MenuFragment : Fragment() {
