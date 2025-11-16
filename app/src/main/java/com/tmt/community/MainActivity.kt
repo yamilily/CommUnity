@@ -12,7 +12,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
@@ -26,21 +25,21 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
+            // Permission is granted.
         } else {
+            // Permission is denied.
         }
     }
 
     private fun askNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
                 PackageManager.PERMISSION_GRANTED
             ) {
-            } else {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,29 +47,43 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
+        // This line correctly sets up the NavController to handle clicks.
+        // We must NOT override this with a different listener.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_menu, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_notifications, R.id.navigation_menu
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         askNotificationPermission()
-        Firebase.messaging.subscribeToTopic("announcements")
-            .addOnCompleteListener { task ->
-                var msg = "Subscribed to announcements!"
-                if (!task.isSuccessful) {
-                    msg = "Subscription failed."
+        Firebase.messaging.subscribeToTopic("announcements") // Added this line just in case for our test later
+
+        // --- CORRECTED IN-APP NOTIFICATION LOGIC ---
+
+        AnnouncementHolder.newAnnouncement.observe(this) { announcement ->
+            if (announcement != null) {
+                val currentDestinationId = navController.currentDestination?.id
+                // Use the CORRECT ID
+                if (currentDestinationId != R.id.navigation_notifications) {
+                    val badge = navView.getOrCreateBadge(R.id.navigation_notifications) // Use the CORRECT ID
+                    badge.isVisible = true
                 }
-                Log.d("TopicSubscription", msg)
             }
+        }
+
+        // Use a separate listener that DOES NOT interfere with navigation
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.navigation_notifications) {
+                // When we successfully navigate to the notifications tab, remove the badge.
+                navView.removeBadge(R.id.navigation_notifications) // Use the CORRECT ID
+            }
+        }
     }
 }
