@@ -1,16 +1,13 @@
 package com.tmt.community
 
-// --- IMPORTS ---
-import android.os.Parcelable
-import androidx.annotation.Keep
-import kotlinx.parcelize.Parcelize
+// This class structure is REQUIRED by Firebase for reading data.
+class Announcement {
+    var title: String = ""
+    var message: String = ""
+    var timestamp: Long = 0L
+    var showInterestButton: Boolean = false
+    var interestedUsers: MutableMap<String, Boolean> = mutableMapOf()
 
-@Keep
-@Parcelize // Add this annotation
-data class Announcement(
-    val title: String = "",
-    val message: String = "",
-    val date: String = "",
-    val timestamp: Long = 0,
-    val showInterestButton: Boolean = false
-) : Parcelable // Implement Parcelable
+    // Firebase needs this empty constructor to create instances of the object.
+    constructor() {}
+}

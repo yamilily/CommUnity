@@ -1,45 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/announcement_background">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
 
-    <TextView
-        android:id="@+id/announcement_title"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:text="Announcement Title" />
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/announcement_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="14sp"
-        tools:text="This is the body of the announcement..." />
+        <TextView
+            android:id="@+id/announcement_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/announcement_timestamp"
+            android:layout_marginEnd="8dp"
+            tools:text="Barangay Meeting"/>
 
-    <TextView
-        android:id="@+id/announcement_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="12sp"
-        tools:text="2025-11-18" />
+        <TextView
+            android:id="@+id/announcement_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            app:layout_constraintTop_toTopOf="@id/announcement_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="5m ago" />
 
-    <Button
-        android:id="@+id/interest_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="I'm Attending"
-        style="?attr/materialButtonOutlinedStyle"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        <TextView
+            android:id="@+id/announcement_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/announcement_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="A meeting will be held at the barangay hall to discuss the upcoming fiesta."/>
 
-</LinearLayout>
+        <!-- Interest Button and Counter Group -->
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/interestGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="interestButton,interestCountText"
+            tools:visibility="visible"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/interestButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Interested"
+            android:textSize="14sp"
+            app:icon="@drawable/ic_star_outline"
+            app:layout_constraintTop_toBottomOf="@id/announcement_message"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/interestCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintStart_toEndOf="@id/interestButton"
+            app:layout_constraintBottom_toBottomOf="@id/interestButton"
+            app:layout_constraintTop_toTopOf="@id/interestButton"
+            tools:text="15 Interested" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
