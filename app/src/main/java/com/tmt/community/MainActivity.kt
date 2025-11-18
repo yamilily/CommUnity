@@ -1,14 +1,20 @@
 package com.tmt.community
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,33 +29,58 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseDatabase
 
+    // --- MOVED THE LAUNCHER HERE, AT THE TOP LEVEL OF THE CLASS ---
+    // This handles the result of the permission request. It must be initialized
+    // before onCreate() is called.
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Permission is granted. You can expect notifications to appear.
+            Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT).show()
+        } else {
+            // Permission is denied. Notifications will be blocked.
+            Toast.makeText(this, "Notifications permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize Firebase Auth and Databasee
         auth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app/")
 
-        // Set the custom toolbar as the action bar
         setSupportActionBar(binding.toolbar)
 
-        // Check if a user is logged in. If not, redirect to LoginActivity
         if (auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
-            return // Stop execution of onCreate
+            return
         }
 
-        // Fetch the user's role and set up the UI accordingly
+        // Now this function call will work correctly
+        askNotificationPermission()
+
         checkUserRoleAndSetupUI()
+    }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API 33+ (Android 13 and higher)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // If permission is not granted, launch the request.
+                // The result is handled by the launcher we defined above.
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 
     private fun checkUserRoleAndSetupUI() {
         val firebaseUser = auth.currentUser
-        // If for some reason user is null, exit to login
         if (firebaseUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
@@ -60,16 +91,12 @@ class MainActivity : AppCompatActivity() {
 
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // Get the role, default to "resident" if not found
                 val role = snapshot.child("role").getValue(String::class.java) ?: "resident"
-
-                // Now that we have the role, setup the navigation
                 setupNavigation(role)
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("MainActivity", "Failed to read user role.", error.toException())
-                // On error, default to resident view for security
                 setupNavigation("resident")
             }
         })
@@ -78,47 +105,40 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigation(role: String) {
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-
-        // Show/Hide the Admin Panel (Home Fragment) based on role
         val homeMenuItem = navView.menu.findItem(R.id.navigation_home)
-
         val appBarConfiguration: AppBarConfiguration
 
         if (role == "admin") {
-            // ADMINS: Show the home button and use the default navigation graph
             homeMenuItem.isVisible = true
             appBarConfiguration = AppBarConfiguration(
                 setOf(R.id.navigation_home, R.id.navigation_menu, R.id.navigation_notifications)
             )
         } else {
-            // RESIDENTS: Hide the home button
             homeMenuItem.isVisible = false
-
-            // IMPORTANT: We must change the start destination for residents
-            // because the default start destination (navigation_home) is now hidden.
             val navGraph = navController.navInflater.inflate(R.navigation.mobile_navigation)
-            navGraph.setStartDestination(R.id.navigation_notifications) // Set announcements as the default screen
+            navGraph.setStartDestination(R.id.navigation_notifications)
             navController.graph = navGraph
-
             appBarConfiguration = AppBarConfiguration(
-                // Home is removed from the top-level destinations
                 setOf(R.id.navigation_menu, R.id.navigation_notifications)
             )
         }
-
-        // Connect the NavController to the ActionBar and BottomNavigationView
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
 
-    // This is for handling notifications, leave it as is
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
         handleIntent(intent)
     }
 
+    // --- ADDED LOGIC TO USE THE 'intent' PARAMETER ---
     private fun handleIntent(intent: Intent?) {
-        // ... (your existing handleIntent code)
+        // This function is called when the activity is launched from a notification tap
+        intent?.extras?.let {
+            val title = it.getString("title")
+            val message = it.getString("message")
+            Log.d("NotificationTap", "Activity opened from notification. Title: $title, Message: $message")
+        }
     }
 }
