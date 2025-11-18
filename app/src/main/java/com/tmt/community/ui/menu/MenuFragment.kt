@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.tmt.community.LoginActivity
+import com.tmt.community.loginandregister.LoginActivity
 import com.tmt.community.databinding.FragmentMenuBinding
 
 class MenuFragment : Fragment() {
