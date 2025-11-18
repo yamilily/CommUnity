@@ -10,15 +10,21 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     // This function is called when a message is received.
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        // Check if the message contains a notification payload.
+        if (remoteMessage.data.isNotEmpty()) {
+            val intent = Intent("new-announcement-event")
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        }
+
+        // --- HANDLE THE NOTIFICATION PAYLOAD FOR THE SYSTEM TRAY ---
         remoteMessage.notification?.let {
-            val title = it.title ?: "New Announcement" // Use a default value if title is null
-            val message = it.body ?: "Check the app for details." // Use a default value if body is null
+            val title = it.title ?: "New Announcement"
+            val message = it.body ?: "Check the app for details."
             sendNotification(title, message)
         }
     }
