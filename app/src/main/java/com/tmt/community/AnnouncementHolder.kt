@@ -1,31 +1,25 @@
 package com.tmt.community
 
-import androidx.lifecycle.MutableLiveData
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+// --- IMPORTS ---
+import android.view.View
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import com.tmt.community.databinding.AnnouncementItemBinding
 
-object AnnouncementHolder {
-    // The LiveData now holds our new Announcement object
-    val newAnnouncement = MutableLiveData<Announcement?>()
+class AnnouncementHolder(private val binding: AnnouncementItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    init {
-        val database = Firebase.database("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app")
-            .getReference("announcements")
+    fun bind(announcement: Announcement) {
+        binding.announcementTitle.text = announcement.title
+        binding.announcementMessage.text = announcement.message // Corrected this ID
+        binding.announcementDate.text = announcement.date
 
-        database.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                // Convert the entire snapshot into an Announcement object
-                val announcement = snapshot.getValue(Announcement::class.java)
-                newAnnouncement.postValue(announcement)
+        if (announcement.showInterestButton) {
+            binding.interestButton.visibility = View.VISIBLE
+            binding.interestButton.setOnClickListener {
+                Toast.makeText(binding.root.context, "You've shown interest!", Toast.LENGTH_SHORT).show()
             }
-            // ... other functions are unchanged
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onChildRemoved(snapshot: DataSnapshot) {}
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onCancelled(error: DatabaseError) {}
-        })
+        } else {
+            binding.interestButton.visibility = View.GONE
+        }
     }
 }

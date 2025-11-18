@@ -1,62 +1,63 @@
 package com.tmt.community
 
+// --- IMPORTS ---
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
-import android.util.Log // <--- IMPORT ADDED
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlin.random.Random
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-    // This function is called when a message is received while the app is in the foreground.
-    // Your existing code here is correct.
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        if (remoteMessage.data.isNotEmpty()) {
-            val title = remoteMessage.data["title"]
-            val body = remoteMessage.data["body"]
+        super.onMessageReceived(remoteMessage)
 
-            if (title != null && body != null) {
-                val newAnnouncementObject = Announcement(title = title, body = body)
-                AnnouncementHolder.newAnnouncement.postValue(newAnnouncementObject)
-                sendNotification(title, body)
-            }
+        remoteMessage.notification?.let {
+            val title = it.title ?: "New Announcement"
+            val body = it.body ?: ""
+
+            // Create an Announcement object using the new 'message' field
+            val newAnnouncement = Announcement(title = title, message = body)
+
+            sendNotification(title, body, newAnnouncement)
         }
     }
 
-    // This is your existing, correct function to build the notification.
-    private fun sendNotification(title: String, body: String) {
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channelId = getString(R.string.default_notification_channel_id)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "Announcements Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(channel)
+    private fun sendNotification(title: String, body: String, newAnnouncement: Announcement) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            // Put the entire Parcelable Announcement object into the intent
+            putExtra("new_announcement", newAnnouncement)
         }
 
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+
+        val channelId = "announcement_channel"
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notifications)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
 
-        notificationManager.notify(Random.nextInt(), notificationBuilder.build())
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Announcements", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        notificationManager.notify(0, notificationBuilder.build())
     }
 
-    // --- THIS IS THE MISSING PIECE ---
-    // This function is automatically called by Firebase when a new token is generated.
-    // We will use it to log the token for our direct test.
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-
-        // Log the token to Logcat with a specific tag so we can find it easily.
-        Log.d("FCM_TOKEN", "Refreshed token: $token")
+        Log.d("FCM", "New token: $token")
     }
 }

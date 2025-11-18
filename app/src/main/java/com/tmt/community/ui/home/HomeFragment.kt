@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.tmt.community.Announcement
 import com.tmt.community.databinding.FragmentHomeBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
-    private val homeViewModel: HomeViewModel by viewModels()
+    private lateinit var databaseReference: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,54 +25,46 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        databaseReference = FirebaseDatabase.getInstance().getReference("Announcements")
 
-        binding.buttonSend.setOnClickListener {
-            val title = binding.editTextTitle.text.toString().trim()
-            val body = binding.editTextBody.text.toString().trim()
-
-            if (title.isEmpty() || body.isEmpty()) {
-                Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            } else {
-                sendAnnouncement(title, body)
-            }
+        // Use the CORRECT ID: post_announcement_button -> postAnnouncementButton
+        binding.postAnnouncementButton.setOnClickListener {
+            sendAnnouncement()
         }
-
-        return root
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun sendAnnouncement() {
+        // Use the CORRECT IDs: announcement_title_input -> announcementTitleInput
+        // and announcement_message_input -> announcementMessageInput
+        val title = binding.announcementTitleInput.text.toString().trim()
+        val message = binding.announcementMessageInput.text.toString().trim()
+        val showInterest = binding.interestButtonCheckbox.isChecked
 
-        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
-            if (role == "admin") {
-                binding.adminPanelCard.visibility = View.VISIBLE
-            } else {
-                binding.adminPanelCard.visibility = View.GONE
+        if (title.isNotEmpty() && message.isNotEmpty()) {
+            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+            val announcement = Announcement(
+                title = title,
+                message = message,
+                date = date,
+                timestamp = System.currentTimeMillis(),
+                showInterestButton = showInterest
+            )
+
+            databaseReference.push().setValue(announcement).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(context, "Announcement posted", Toast.LENGTH_SHORT).show()
+                    binding.announcementTitleInput.text.clear()
+                    binding.announcementMessageInput.text.clear()
+                    binding.interestButtonCheckbox.isChecked = false
+                } else {
+                    Toast.makeText(context, "Failed to post announcement", Toast.LENGTH_SHORT).show()
+                }
             }
+        } else {
+            Toast.makeText(context, "Please fill out all fields", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun sendAnnouncement(title: String, body: String) {
-        val database = Firebase.database("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app")
-            .reference.child("announcements")
-        val announcementId = database.push().key ?: return
-
-        val announcement = mapOf(
-            "title" to title,
-            "body" to body,
-            "timestamp" to System.currentTimeMillis()
-        )
-
-        database.child(announcementId).setValue(announcement)
-            .addOnSuccessListener {
-                Toast.makeText(context, "Announcement sent!", Toast.LENGTH_SHORT).show()
-                binding.editTextTitle.text?.clear()
-                binding.editTextBody.text?.clear()
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Failed to send announcement.", Toast.LENGTH_SHORT).show()
-            }
     }
 
     override fun onDestroyView() {
