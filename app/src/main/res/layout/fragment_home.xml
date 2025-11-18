@@ -4,17 +4,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.notifications.NotificationsFragment">
+    tools:context=".ui.home.HomeFragment">
 
-    <!-- The ID here is "announcementsRecyclerView" -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/announcementsRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <TextView
+        android:id="@+id/admin_panel_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin Panel"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/announcement_item" />
+        android:layout_marginTop="32dp" />
+
+    <EditText
+        android:id="@+id/announcement_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Announcement Title"
+        android:inputType="textCapSentences"
+        app:layout_constraintTop_toBottomOf="@id/admin_panel_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:autofillHints="name" />
+
+    <EditText
+        android:id="@+id/announcement_body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Announcement Body"
+        android:inputType="textMultiLine"
+        app:layout_constraintTop_toBottomOf="@id/announcement_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="text" />
+
+    <CheckBox
+        android:id="@+id/interest_button_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Include an 'I'm Interested' button"
+        app:layout_constraintTop_toBottomOf="@id/announcement_body"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/send_announcement_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Announcement"
+        app:layout_constraintTop_toBottomOf="@id/interest_button_checkbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
