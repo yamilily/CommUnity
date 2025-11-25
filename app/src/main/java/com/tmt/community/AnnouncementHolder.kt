@@ -1,7 +1,10 @@
 package com.tmt.community
 
 import android.app.AlertDialog
+import android.content.Context
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -15,20 +18,26 @@ class AnnouncementHolder(private val binding: AnnouncementItemBinding) : Recycle
     private val auth = FirebaseAuth.getInstance()
     private val currentUserId = auth.currentUser?.uid
 
-    // Updated bind function to accept isAdmin status
     fun bind(announcement: Announcement, announcementRef: DatabaseReference, isAdmin: Boolean) {
         binding.announcementTitle.text = announcement.title
         binding.announcementMessage.text = announcement.message
         binding.announcementTimestamp.text = getFormattedTimestamp(announcement.timestamp)
 
-        // --- DELETE LOGIC ---
+        // --- ADMIN CONTROLS (EDIT & DELETE) ---
         if (isAdmin) {
             binding.deleteButton.visibility = View.VISIBLE
+            binding.editButton.visibility = View.VISIBLE
+
             binding.deleteButton.setOnClickListener {
                 showDeleteConfirmation(itemView.context, announcementRef)
             }
+
+            binding.editButton.setOnClickListener {
+                showEditDialog(itemView.context, announcement, announcementRef)
+            }
         } else {
             binding.deleteButton.visibility = View.GONE
+            binding.editButton.visibility = View.GONE
         }
 
         // --- INTEREST LOGIC ---
@@ -45,20 +54,64 @@ class AnnouncementHolder(private val binding: AnnouncementItemBinding) : Recycle
         }
     }
 
-    private fun showDeleteConfirmation(context: android.content.Context, ref: DatabaseReference) {
+    private fun showEditDialog(context: Context, announcement: Announcement, ref: DatabaseReference) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Edit Announcement")
+
+        // Create a layout for the inputs programmatically
+        val layout = LinearLayout(context)
+        layout.orientation = LinearLayout.VERTICAL
+        layout.setPadding(50, 20, 50, 20)
+
+        // Title Input
+        val titleInput = EditText(context)
+        titleInput.hint = "Title"
+        titleInput.setText(announcement.title)
+        layout.addView(titleInput)
+
+        // Message Input
+        val messageInput = EditText(context)
+        messageInput.hint = "Message"
+        messageInput.setText(announcement.message)
+        messageInput.minLines = 3
+        messageInput.setPadding(0, 30, 0, 0) // Add some spacing
+        layout.addView(messageInput)
+
+        builder.setView(layout)
+
+        // Buttons
+        builder.setPositiveButton("Save") { _, _ ->
+            val newTitle = titleInput.text.toString().trim()
+            val newMessage = messageInput.text.toString().trim()
+
+            if (newTitle.isNotEmpty() && newMessage.isNotEmpty()) {
+                // Update only the title and message fields
+                val updates = mapOf<String, Any>(
+                    "title" to newTitle,
+                    "message" to newMessage
+                )
+
+                ref.updateChildren(updates).addOnSuccessListener {
+                    Toast.makeText(context, "Announcement updated", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener { e ->
+                    Toast.makeText(context, "Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
+            }
+        }
+        builder.setNegativeButton("Cancel", null)
+        builder.show()
+    }
+
+    private fun showDeleteConfirmation(context: Context, ref: DatabaseReference) {
         AlertDialog.Builder(context)
             .setTitle("Delete Announcement")
-            .setMessage("Are you sure you want to delete this announcement?")
+            .setMessage("Are you sure you want to delete this announcement? This cannot be undone.")
             .setPositiveButton("Delete") { _, _ ->
-                // Log that we are attempting to delete
-                android.util.Log.d("DELETE_DEBUG", "Attempting to delete at: ${ref.toString()}")
-
                 ref.removeValue().addOnSuccessListener {
                     Toast.makeText(context, "Announcement deleted", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener { e ->
-                    // --- THIS IS THE IMPORTANT PART ---
-                    // If it fails, this will print the exact reason in your Logcat
-                    android.util.Log.e("DELETE_DEBUG", "Delete failed: ${e.message}")
                     Toast.makeText(context, "Failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }

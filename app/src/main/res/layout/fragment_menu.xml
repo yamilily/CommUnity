@@ -1,54 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".ui.menu.MenuFragment">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="0dp"
+    <!-- User Info Text -->
+    <TextView
+        android:id="@+id/text_menu"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Logged in as:\nadmin@test.com\n(Admin)" />
 
-        <LinearLayout
+    <!-- Container for buttons at the bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- MANAGE USER BUTTON (Hidden for residents) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/manageUserButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:layout_marginBottom="16dp"
+            android:text="Manage User Roles"
+            android:padding="12dp"
+            android:visibility="gone"
+            app:icon="@drawable/ic_account_circle"
+            app:iconGravity="textStart"
+            tools:visibility="visible" />
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/ic_account_circle"
-                app:tint="?attr/colorPrimary"/>
-
-            <TextView
-                android:id="@+id/user_email_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                tools:text="user@example.com" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/logout_button"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="Logout" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+        <!-- LOGOUT BUTTON -->
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:backgroundTint="#D32F2F"
+            android:padding="12dp"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
