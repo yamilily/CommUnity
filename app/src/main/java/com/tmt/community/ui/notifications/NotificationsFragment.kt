@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.tmt.community.Announcement
 import com.tmt.community.AnnouncementHolder
@@ -20,6 +21,9 @@ class NotificationsFragment : Fragment() {
     private val binding get() = _binding!!
     private var adapter: FirebaseRecyclerAdapter<Announcement, AnnouncementHolder>? = null
 
+    // Variable to store if the current user is an admin
+    private var isAdmin: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,6 +35,24 @@ class NotificationsFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+        // 1. Fetch the user's role first
+        val auth = FirebaseAuth.getInstance()
+        val userId = auth.currentUser?.uid
+
+        if (userId != null) {
+            val userRef = FirebaseDatabase.getInstance("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("users").child(userId)
+
+            userRef.get().addOnSuccessListener { snapshot ->
+                val role = snapshot.child("role").getValue(String::class.java)
+                isAdmin = (role == "admin")
+                // Notify adapter to refresh views with new permission
+                adapter?.notifyDataSetChanged()
+            }
+        }
+
+        // 2. Setup the adapter
         val database = FirebaseDatabase.getInstance("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Announcements")
         val query = database.orderByChild("timestamp")
 
@@ -47,18 +69,17 @@ class NotificationsFragment : Fragment() {
             override fun onBindViewHolder(holder: AnnouncementHolder, position: Int, model: Announcement) {
                 val reversedPosition = itemCount - 1 - position
                 val announcementRef = getRef(reversedPosition)
-                // CORRECTED: Pass the correct reference to the holder
-                holder.bind(getItem(reversedPosition), announcementRef)
+
+                // 3. Pass the isAdmin flag to the holder
+                holder.bind(getItem(reversedPosition), announcementRef, isAdmin)
             }
 
             override fun onDataChanged() {
                 super.onDataChanged()
-                // CORRECTED: Use binding to reference the view
                 binding.emptyView.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
             }
         }
 
-        // CORRECTED: Use binding to reference views
         (binding.recyclerView.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         binding.recyclerView.adapter = adapter
         adapter?.startListening()
