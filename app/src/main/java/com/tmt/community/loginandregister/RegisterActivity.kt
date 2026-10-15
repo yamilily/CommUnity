@@ -18,7 +18,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tmt.community.MainActivity
 import com.tmt.community.R
-import com.tmt.community.loginandregister.User
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -34,17 +33,23 @@ class RegisterActivity : AppCompatActivity() {
 
         val emailEditText = findViewById<TextInputEditText>(R.id.email_edit_text)
         val passwordEditText = findViewById<TextInputEditText>(R.id.password_edit_text)
+        val phoneEditText = findViewById<TextInputEditText>(R.id.phone_edit_text)
         val registerButton = findViewById<Button>(R.id.register_button)
         val loginTextView = findViewById<TextView>(R.id.login_text_view)
 
-        // --- REGISTER BUTTON  LOGIC (Unchanged) ---
         registerButton.setOnClickListener {
-            // ... (your existing registration code)
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
+            val phone = phoneEditText.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty() || phone.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Basic PH format check — must start with +63
+            if (!phone.startsWith("+63") || phone.length != 13) {
+                Toast.makeText(this, "Enter a valid PH number: +639XXXXXXXXX", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
@@ -53,18 +58,20 @@ class RegisterActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val firebaseUser = auth.currentUser
                         firebaseUser?.let {
-                            saveUserToDatabase(it.uid, it.email)
+                            saveUserToDatabase(it.uid, it.email, phone)
                         }
                     } else {
-                        Toast.makeText(baseContext, "Registration failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            baseContext,
+                            "Registration failed: ${task.exception?.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
         }
 
-        // --- CORRECTED TEXT AND CLICK LISTENER FOR "LOGIN" PROMPT ---
         val promptText = getString(R.string.login_prompt)
         val actionText = getString(R.string.login_action)
-
         val spannableString = SpannableString("$promptText$actionText")
         spannableString.setSpan(
             StyleSpan(Typeface.BOLD),
@@ -73,16 +80,11 @@ class RegisterActivity : AppCompatActivity() {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         loginTextView.text = spannableString
-
-        loginTextView.setOnClickListener {
-            // Go back to the LoginActivity
-            finish()
-        }
+        loginTextView.setOnClickListener { finish() }
     }
 
-    private fun saveUserToDatabase(userId: String, email: String?) {
-        // ... (your existing saveUserToDatabase code is here)
-        val user = User(email = email, role = "resident")
+    private fun saveUserToDatabase(userId: String, email: String?, phone: String) {
+        val user = User(email = email, role = "resident", phoneNumber = phone)
         database.child("users").child(userId).setValue(user)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

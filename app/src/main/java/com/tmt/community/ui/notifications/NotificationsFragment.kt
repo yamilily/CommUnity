@@ -21,7 +21,6 @@ class NotificationsFragment : Fragment() {
     private val binding get() = _binding!!
     private var adapter: FirebaseRecyclerAdapter<Announcement, AnnouncementHolder>? = null
 
-    // Variable to store if the current user is an admin
     private var isAdmin: Boolean = false
 
     override fun onCreateView(
@@ -36,7 +35,6 @@ class NotificationsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        // 1. Fetch the user's role first
         val auth = FirebaseAuth.getInstance()
         val userId = auth.currentUser?.uid
 
@@ -47,12 +45,10 @@ class NotificationsFragment : Fragment() {
             userRef.get().addOnSuccessListener { snapshot ->
                 val role = snapshot.child("role").getValue(String::class.java)
                 isAdmin = (role == "admin")
-                // Notify adapter to refresh views with new permission
                 adapter?.notifyDataSetChanged()
             }
         }
 
-        // 2. Setup the adapter
         val database = FirebaseDatabase.getInstance("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Announcements")
         val query = database.orderByChild("timestamp")
 
@@ -70,7 +66,6 @@ class NotificationsFragment : Fragment() {
                 val reversedPosition = itemCount - 1 - position
                 val announcementRef = getRef(reversedPosition)
 
-                // 3. Pass the isAdmin flag to the holder
                 holder.bind(getItem(reversedPosition), announcementRef, isAdmin)
             }
 

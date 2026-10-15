@@ -15,20 +15,14 @@ import androidx.core.content.edit
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        // Check for the custom data payload from our Cloud Function
         if (remoteMessage.data.containsKey("new_announcement")) {
-            // --- THIS IS THE NEW, ROBUST LOGIC ---
-            // Save a flag indicating a new announcement has arrived.
-            // This works even if the app is in the background.
             val prefs = getSharedPreferences("CommUnityPrefs", Context.MODE_PRIVATE)
             prefs.edit { putBoolean("new_announcement_badge", true) }
 
-            // Also send a broadcast for an instant update if the app is in the foreground
             val intent = Intent("new-announcement-event")
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         }
 
-        // Handle the visible notification part
         remoteMessage.notification?.let {
             val title = it.title ?: "New Announcement"
             val message = it.body ?: "Check the app for details."
@@ -66,7 +60,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         notificationManager.notify(0, notificationBuilder.build())
     }
 
-    // onNewToken remains the same
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         // ...

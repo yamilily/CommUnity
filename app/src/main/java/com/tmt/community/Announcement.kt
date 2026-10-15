@@ -8,6 +8,5 @@ class Announcement {
     var showInterestButton: Boolean = false
     var interestedUsers: MutableMap<String, Boolean> = mutableMapOf()
 
-    // Firebase needs this empty constructor to create instances of the object.
     constructor() {}
 }

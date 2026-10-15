@@ -34,9 +34,7 @@ class LoginActivity : AppCompatActivity() {
         val loginButton = findViewById<Button>(R.id.login_button)
         val registerTextView = findViewById<TextView>(R.id.register_text_view)
 
-        // --- LOGIN BUTTON LOGIC (Unchanged) ---
         loginButton.setOnClickListener {
-            // ... (your existing login code is here)
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
@@ -57,9 +55,8 @@ class LoginActivity : AppCompatActivity() {
                 }
         }
 
-        // --- CORRECTED TEXT FOR THE REGISTER PROMPT ---
-        val promptText = getString(R.string.register_prompt) // USE THE CORRECT STRING
-        val actionText = getString(R.string.register_action) // USE THE CORRECT STRING
+        val promptText = getString(R.string.register_prompt)
+        val actionText = getString(R.string.register_action)
 
         val spannableString = SpannableString("$promptText$actionText")
         spannableString.setSpan(

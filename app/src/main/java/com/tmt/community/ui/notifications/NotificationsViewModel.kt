@@ -33,7 +33,6 @@ class NotificationsViewModel : ViewModel() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle error
             }
         })
     }

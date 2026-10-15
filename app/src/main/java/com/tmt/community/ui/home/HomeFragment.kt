@@ -25,7 +25,6 @@ class HomeFragment : Fragment() {
 
         val database = FirebaseDatabase.getInstance("https://community-1f98e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Announcements")
 
-        // ... inside HomeFragment.kt
 
         binding.postButton.setOnClickListener {
             val title = binding.titleEditText.text.toString().trim()
@@ -35,8 +34,6 @@ class HomeFragment : Fragment() {
             if (title.isNotEmpty() && message.isNotEmpty()) {
                 val announcementId = database.push().key!!
 
-                // CORRECTED: Create an empty object, then apply properties.
-                // This works with the required no-argument constructor.
                 val announcement = Announcement().apply {
                     this.title = title
                     this.message = message
@@ -59,7 +56,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-// ... rest of the file
         return root
     }
 
